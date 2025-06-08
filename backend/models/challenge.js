@@ -5,7 +5,7 @@ const challengesSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'Coordinators',
+      ref: 'coordinators',
     },
     title: {
       type: String,
@@ -25,4 +25,4 @@ const challengesSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Challenges', challengesSchema);
+module.exports = mongoose.model('Challenge', challengesSchema);
