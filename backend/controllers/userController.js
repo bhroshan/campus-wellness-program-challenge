@@ -48,6 +48,7 @@ const registerUser = asyncHandler(async (req, res) => {
       last_name: coordinator.last_name,
       email: coordinator.email,
       gender: coordinator.gender,
+      token: generateToken(coordinator._id),
     });
   } else {
     res.status(400);
@@ -59,14 +60,46 @@ const registerUser = asyncHandler(async (req, res) => {
 //@route    POST /api/users/login
 //@access   Public
 const loginUser = asyncHandler(async (req, res) => {
-  res.json({ message: 'Login User' });
+  //Destructuring the credentials user is giving while login
+  const { email, password } = req.body;
+
+  //Check if the coordinator exists
+  const coordinator = await Coordinator.findOne({ email });
+
+  if (coordinator && (await bcrypt.compare(password, coordinator.password))) {
+    res.json({
+      _id: coordinator.id,
+      first_name: coordinator.first_name,
+      last_name: coordinator.last_name,
+      email: coordinator.email,
+      gender: coordinator.gender,
+      token: generateToken(coordinator._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error('Invalid Credentials');
+  }
 });
 
 //@desc     Get user data
 //@route    GET /api/users/me
-//@access   Public
+//@access   Private
 const getMe = asyncHandler(async (req, res) => {
-  res.json({ message: 'This is a user data' });
+  const { _id, first_name, last_name, email, gender } =
+    await Coordinator.findById(req.user.id);
+  res.status(200).json({
+    id: _id,
+    first_name,
+    last_name,
+    email,
+    gender,
+  });
 });
 
+//Generating JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: '20d',
+  });
+};
 module.exports = { registerUser, loginUser, getMe };
