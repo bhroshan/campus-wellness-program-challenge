@@ -1,7 +1,7 @@
 const asyncHandler = require('express-async-handler');
 
 const Challenge = require('../models/challenge');
-const Coordinator = require('../models/coordinators');
+const User = require('../models/users');
 
 //@desc     Get challenge (s)
 //@route    GET /api/challenges
@@ -41,9 +41,9 @@ const updateChallenge = asyncHandler(async (req, res) => {
     throw new Error('Challenge not found');
   }
 
-  const user = await Coordinator.findById(req.user.id);
+  const user = await User.findById(req.user.id);
 
-  //Check for coordinator exists or not
+  //Check for User exists or not
   if (!user) {
     res.status(401);
     throw new Error('User not found');
@@ -76,7 +76,7 @@ const deleteChallenge = asyncHandler(async (req, res) => {
   }
 
   //Check if Logged in user exits
-  const user = await Coordinator.findById(req.user.id);
+  const user = await User.findById(req.user.id);
   if (!user) {
     res.status(401);
     throw new Error('User not found');

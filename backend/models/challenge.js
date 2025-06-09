@@ -5,7 +5,7 @@ const challengesSchema = mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'coordinators',
+      ref: 'users',
     },
     title: {
       type: String,

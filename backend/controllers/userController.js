@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const asyncHandler = require('express-async-handler');
-const Coordinator = require('../models/coordinators');
+const User = require('../models/users');
 
 //@desc     Register a new user
 //@route    POST /api/users
@@ -12,16 +12,16 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Request body is missing');
   }
-  const { first_name, last_name, email, password, gender } = req.body;
+  const { first_name, last_name, email, role, password, gender } = req.body;
 
-  if (!first_name || !last_name || !email || !password || !gender) {
+  if (!first_name || !last_name || !email || !role || !password || !gender) {
     res.status(400);
     throw new Error('Please add all fields');
   }
 
-  //check if coordinator already exists
-  const coordinatorExists = await Coordinator.findOne({ email });
-  if (coordinatorExists) {
+  //check if user already exists
+  const userExists = await User.findOne({ email });
+  if (userExists) {
     res.status(400);
     throw new Error('User already exists');
   }
@@ -30,25 +30,27 @@ const registerUser = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  //Create coordinator
-  const coordinator = await Coordinator.create({
+  //Create user
+  const user = await User.create({
     first_name,
     last_name,
     email,
+    role,
     password: hashedPassword,
     gender,
   });
 
-  console.log('New coordinator saved:', coordinator);
+  console.log('New user saved:', user);
 
-  if (coordinator) {
+  if (user) {
     res.status(201).json({
-      _id: coordinator.id,
-      first_name: coordinator.first_name,
-      last_name: coordinator.last_name,
-      email: coordinator.email,
-      gender: coordinator.gender,
-      token: generateToken(coordinator._id),
+      _id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      role: user.role,
+      gender: user.gender,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -63,17 +65,18 @@ const loginUser = asyncHandler(async (req, res) => {
   //Destructuring the credentials user is giving while login
   const { email, password } = req.body;
 
-  //Check if the coordinator exists
-  const coordinator = await Coordinator.findOne({ email });
+  //Check if the user exists
+  const user = await User.findOne({ email });
 
-  if (coordinator && (await bcrypt.compare(password, coordinator.password))) {
+  if (user && (await bcrypt.compare(password, user.password))) {
     res.json({
-      _id: coordinator.id,
-      first_name: coordinator.first_name,
-      last_name: coordinator.last_name,
-      email: coordinator.email,
-      gender: coordinator.gender,
-      token: generateToken(coordinator._id),
+      _id: user.id,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      email: user.email,
+      role: user.role,
+      gender: user.gender,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -85,13 +88,14 @@ const loginUser = asyncHandler(async (req, res) => {
 //@route    GET /api/users/me
 //@access   Private
 const getMe = asyncHandler(async (req, res) => {
-  const { _id, first_name, last_name, email, gender } =
-    await Coordinator.findById(req.user.id);
+  const { _id, first_name, last_name, email, role, gender } =
+    await User.findById(req.user.id);
   res.status(200).json({
     id: _id,
     first_name,
     last_name,
     email,
+    role,
     gender,
   });
 });
