@@ -1,6 +1,8 @@
 
+import React from 'react'
 import Avatar from '@mui/material/Avatar';
 import profileImg from '../pages/images/profile.jpg'
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Grid,
@@ -14,9 +16,10 @@ import {
 
 
 function Sidebar() {
+    const navigate = useNavigate();
     return (
         <>
-            <Grid container sx={{ backgroundColor: '#E1F5FE', width: '100%' }}>
+            <Grid container sx={{ backgroundColor: '#E1F5FE', width: '100%', height: '100vh' }} flexDirection={'column'}>
                 <Grid
                     item
                     sm={12}
@@ -41,16 +44,57 @@ function Sidebar() {
                         Coordinator
                     </Typography>
                 </Grid>
-                <Grid item
+
+                <Divider sx={{ mt: 0.5, color: 'black' }} />
+
+                <Grid
+                    item
                     sm={12}
                     sx={{
-                        backgroundColor: '#E0E0E0',
+
+                        backgroundColor: '#E1F5FE',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center', // Centers horizontally
-                        justifyContent: 'center', // Centers vertically (if height is defined)
-                        py: 1, // Padding top & bottom
-                    }}></Grid>
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        px: 2,
+                        gap: 2,
+                        pt: 2,
+                    }}
+                >
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        Dashboard
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        Create Wellness Challenge
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        View Challenge List
+                    </Button>
+                    <Button
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/dashboard')}
+                    >
+                        Enroll Participant
+                    </Button>
+                </Grid>
             </Grid>
         </>
     )

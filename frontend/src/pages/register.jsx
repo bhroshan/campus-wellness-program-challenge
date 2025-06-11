@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'
+import { register, reset } from '../features/auth/authSlice'
 import {
     Box,
     Button,
-    Checkbox,
     FormControl,
     FormControlLabel,
     FormLabel,
@@ -16,6 +19,7 @@ import {
     Typography
 } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import Loading from '../components/Loading';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -26,32 +30,60 @@ const Register = () => {
         role: '',
         password: '',
         confirmPassword: '',
-        terms: false,
     });
 
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value,
-        }));
-    };
+    const { firstName, lastName, email, gender, role, password, confirmPassword } = formData
+
+
+    // const navigate = useNavigate()
+    // const dispatch = useDispatch()
+
+
+    // const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
+
+
+
+    // useEffect(() => {
+    //     if (isError) {
+    //         toast.error(message)
+    //     }
+    //     if (isSuccess || user) {
+    //         navigate('/dashboard')
+    //     }
+    //     dispatch(reset())
+    // }, [user, isError, isSuccess, message, navigate, dispatch])
+
+    const onChange = (e) => {
+        setFormData((prevState) => ({
+            ...prevState,
+            [e.target.name]: e.target.value,
+
+        }))
+    }
+
+    // const handleChange = (e) => {
+    //     const { name, value, type, checked } = e.target;
+    //     setFormData((prev) => ({
+    //         ...prev,
+    //         [name]: type === 'checkbox' ? checked : value,
+    //     }));
+    // };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (formData.password !== formData.confirmPassword) {
-            alert("Passwords do not match.");
-            return;
-        }
+        // if (password !== confirmPassword) {
+        //     toast.error('Password do not match')
+        // } else {
+        //     const userData = { firstName, lastName, email, gender, role, password, confirmPassword }
 
-        if (!formData.terms) {
-            alert("You must agree to the Terms and Conditions.");
-            return;
-        }
+        //     dispatch(register(userData))
+        // }
 
-        console.log(formData);
+        // console.log(formData);
     };
-
+    // if (isLoading) {
+    //     return <Loading />
+    // }
     return (
         <Paper
             elevation={8}
@@ -113,11 +145,15 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="First Name"
+                                    name='firstName'
+                                    id='firstName'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="text"
+                                    value={firstName}
+                                    onChange={onChange}
                                 /></Box>
                             </Grid>
 
@@ -126,11 +162,15 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Last Name"
+                                    name='lastName'
+                                    id='lastName'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="text"
+                                    value={lastName}
+                                    onChange={onChange}
                                 /></Box>
                             </Grid>
 
@@ -139,11 +179,15 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Email"
+                                    id='email'
+                                    name='email'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="email"
+                                    value={email}
+                                    onChange={onChange}
                                 /></Box>
                             </Grid>
 
@@ -155,8 +199,9 @@ const Register = () => {
                                     <RadioGroup
                                         row
                                         name="gender"
-                                        value={formData.gender}
-                                        onChange={handleChange}
+                                        id='gender'
+                                        value={gender}
+                                        onChange={onChange}
                                     >
                                         <FormControlLabel value="male" control={<Radio />} label="Male" />
                                         <FormControlLabel value="female" control={<Radio />} label="Female" />
@@ -170,11 +215,15 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Password"
+                                    id='password'
+                                    name='password'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="password"
+                                    value={password}
+                                    onChange={onChange}
                                 /></Box>
                             </Grid>
 
@@ -183,11 +232,15 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Confirm Password"
+                                    id='confirmPassword'
+                                    name='confirmPassword'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="password"
+                                    value={confirmPassword}
+                                    onChange={onChange}
                                 /></Box>
                             </Grid>
 
@@ -199,46 +252,22 @@ const Register = () => {
                                     <RadioGroup
                                         row
                                         name="role"
-                                        value={formData.role}
-                                        onChange={handleChange}
+                                        id='role'
+                                        value={role}
+                                        onChange={onChange}
                                     >
-                                        <FormControlLabel value="Coordinator" control={<Radio />} label="Coordinator" />
-                                        <FormControlLabel value="Student" control={<Radio />} label="Student" />
+                                        <FormControlLabel value="coordinator" control={<Radio />} label="Coordinator" />
+                                        <FormControlLabel value="student" control={<Radio />} label="Student" />
                                     </RadioGroup>
                                 </FormControl></Box>
                             </Grid>
-
-                            {/* Checkbox for terms and conditions */}
-
-                            <Grid item xs={12}>
-                                <Box p={2.7} pt={0} pb={0} sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
-                                    <Checkbox
-                                        name="terms"
-                                        checked={formData.terms}
-                                        onChange={handleChange}
-                                        required
-                                        sx={{ paddingRight: 1 }}
-                                    />
-                                    <Typography variant="body2">
-                                        I agree to the{' '}
-                                        <Link href="#" underline="hover">
-                                            Terms and Conditions {' '}
-                                        </Link>
-                                        &{' '}
-                                        <Link href="#" underline="hover">
-                                            Privacy Policy {' '}
-                                        </Link>
-                                    </Typography>
-                                </Box>
-                            </Grid>
-
-
 
                         </Grid>
                         {/* Sign Up Button / Register */}
 
                         <Grid item xs={12}><Button
                             type="submit"
+                            id='submit'
                             variant="contained"
                             fullWidth
                             startIcon={<PersonAddIcon />}
