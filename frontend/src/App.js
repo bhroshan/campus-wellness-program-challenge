@@ -1,28 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
-// import RegisterStudent from './components/RegisterStudent';
-// import StudentList from './components/StudentList';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Register from './pages/Register';
+import Login from './pages/Login';
 import './App.css';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="nav-bar">
-        <Link to="/">Register Student</Link>
-        <Link to="/students">Student List</Link>
-      </div>
-
-      {/* <div className="content">
-        <Routes>
-          <Route path="/" element={<RegisterStudent />} />
-          <Route path="/students" element={<StudentList />} />
-        </Routes>
-      </div> */}
-    </BrowserRouter>
+    <>
+      <Router>
+        <div className="">
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
+      </Router>
+    </>
   );
 }
 
