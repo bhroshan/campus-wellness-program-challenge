@@ -101,19 +101,19 @@ const Dashboard = () => {
                             {/* Card Box */}
                             <Grid item sm={12} sx={{ p: 2, mt: 6, display: 'flex' }} >
                                 {/* cards */}
-                                <Box sx={{ width: '100%', mb: 2, }}>
+                                <Box sx={{ width: '100%', mb: 2, mx: 10 }}>
                                     <Card sx={{ minWidth: 275, backgroundColor: '#BDBDBD', boxShadow: '2', borderRadius: '8', borderTopRightRadius: '0', borderBottomLeftRadius: '0' }}>
                                         <CardContent display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
                                             <Typography gutterBottom sx={{ color: 'black', fontSize: 14 }}>
                                                 20
                                             </Typography>
-                                            <Typography sx={{ color: 'black', mb: 1.5 }}>Active Participants</Typography>
+                                            <Typography sx={{ color: 'black', mb: 1.5 }}>Total Challenges</Typography>
                                         </CardContent>
                                     </Card>
                                 </Box>
-                                <Box sx={{ width: '100%', mb: 2 }}>
+                                <Box sx={{ width: '100%', mb: 2, mx: 10 }}>
                                     <Card sx={{ minWidth: 275, backgroundColor: '#BDBDBD', boxShadow: '2', borderRadius: '8', borderTopRightRadius: '0', borderBottomLeftRadius: '0' }}>
-                                        <CardContent display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+                                        <CardContent display={'flex'} >
                                             <Typography gutterBottom sx={{ color: 'black', fontSize: 14 }}>
                                                 20
                                             </Typography>
