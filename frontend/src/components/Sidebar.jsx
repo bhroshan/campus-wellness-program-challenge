@@ -13,10 +13,50 @@ import {
     Divider,
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import GroupIcon from '@mui/icons-material/Group';
+
+// Define routes for different user roles
+const sidebarRoutes = {
+    coordinator: [
+        {
+            path: '/dashboard',
+            name: 'Dashboard',
+            icon: <DashboardIcon />
+        },
+        {
+            path: '/create-challenge',
+            name: 'Create Wellness Challenge',
+            icon: <AddCircleIcon />
+        },
+        {
+            path: '/view-challenge-list',
+            name: 'View Challenge List',
+            icon: <FormatListBulletedIcon />
+        }
+    ],
+    student: [
+        {
+            path: '/view-challenge-list',
+            name: 'View Challenge List',
+            icon: <FormatListBulletedIcon />
+        },
+        {
+            path: '/joined-challenge',
+            name: 'Joined Challenges',
+            icon: <GroupIcon />
+        }
+    ]
+};
 
 function Sidebar() {
     const navigate = useNavigate();
     const { user } = useSelector((state) => state.auth);
+    
+    // Get routes based on user role
+    const routes = sidebarRoutes[user.role === 'coordinator' ? 'coordinator' : 'student'];
     
     return (
         <>
@@ -64,39 +104,18 @@ function Sidebar() {
                         pt: 2,
                     }}
                 >
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={() => navigate('/dashboard')}
-                    >
-                        Dashboard
-                    </Button>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={() => navigate('/create-challenge')}
-                    >
-                        Create Wellness Challenge
-                    </Button>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={() => navigate('/view-challenge-list')}
-                    >
-                        View Challenge List
-                    </Button>
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={() => navigate('/joined-challenge')}
-                    >
-                        Joined challenges
-                    </Button>
-
+                    {routes.map((route, index) => (
+                        <Button
+                            key={index}
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={() => navigate(route.path)}
+                            startIcon={route.icon}
+                        >
+                            {route.name}
+                        </Button>
+                    ))}
                 </Grid>
             </Grid>
         </>

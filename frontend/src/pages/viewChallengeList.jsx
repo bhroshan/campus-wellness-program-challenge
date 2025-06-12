@@ -16,7 +16,6 @@ function ViewChallengeList() {
 
     return (
         <>
-            <Navbar />
             <Button
                 variant="contained"
                 fullWidth

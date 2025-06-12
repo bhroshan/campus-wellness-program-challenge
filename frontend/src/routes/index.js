@@ -2,6 +2,7 @@ import Home from '../pages/Home';
 import Login from '../pages/login';
 import Register from '../pages/register';
 import Dashboard from '../pages/Dashboard';
+import DashboardLayout from '../layouts/DashboardLayout';
 import CreateChallenge from '../pages/CreateChallenge';
 import ViewChallengeList from '../pages/viewChallengeList';
 import JoinedChallenge from '../pages/JoinedChallenge';
@@ -30,24 +31,30 @@ export const publicRoutes = [
 // Private routes configuration
 export const privateRoutes = [
   {
-    path: '/dashboard',
-    component: Dashboard,
-    title: 'Dashboard',
-  },
-  {
-    path: '/view-challenge-list',
-    component: ViewChallengeList,
-    title: 'ViewChallengeList',
-  },
-  {
-    path: '/create-challenge',
-    component: CreateChallenge,
-    title: 'CreateChallenge',
-  },
-  {
-    path: '/joined-challenge',
-    component: JoinedChallenge,
-    title: 'JoinedChallenge',
+    path: '/',
+    component: DashboardLayout,
+    children: [
+      {
+        path: 'dashboard',
+        component: Dashboard,
+        title: 'Dashboard',
+      },
+      {
+        path: 'create-challenge',
+        component: CreateChallenge,
+        title: 'Create Challenge',
+      },
+      {
+        path: 'view-challenge-list',
+        component: ViewChallengeList,
+        title: 'View Challenges',
+      },
+      {
+        path: 'joined-challenge',
+        component: JoinedChallenge,
+        title: 'Joined Challenges',
+      },
+    ],
   },
   {
     path: '/view-details',

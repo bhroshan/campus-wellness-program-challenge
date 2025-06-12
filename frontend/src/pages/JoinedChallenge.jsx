@@ -16,7 +16,6 @@ function JoinedChallenge() {
 
     return (
         <>
-            <Navbar />
             <Button
                 variant="contained"
                 fullWidth

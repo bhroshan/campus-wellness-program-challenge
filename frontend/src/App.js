@@ -21,7 +21,7 @@ const AppContent = () => {
   return (
     <Routes>
       {/* Public Routes */}
-      {publicRoutes.map(({ path, component: Component, title }) => (
+      {publicRoutes.map(({ path, component: Component }) => (
         <Route
           key={path}
           path={path}
@@ -33,8 +33,8 @@ const AppContent = () => {
         />
       ))}
 
-      {/* Private Routes */}
-      {privateRoutes.map(({ path, component: Component, title }) => (
+      {/* Private Routes with nested routes */}
+      {privateRoutes.map(({ path, component: Component, children }) => (
         <Route
           key={path}
           path={path}
@@ -43,7 +43,15 @@ const AppContent = () => {
               <Component />
             </PrivateRoute>
           }
-        />
+        >
+          {children?.map(({ path: childPath, component: ChildComponent }) => (
+            <Route
+              key={childPath}
+              path={childPath}
+              element={<ChildComponent />}
+            />
+          ))}
+        </Route>
       ))}
     </Routes>
   );
