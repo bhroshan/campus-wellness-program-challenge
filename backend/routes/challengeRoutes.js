@@ -15,7 +15,9 @@ const {
   joinChallenge,
   leaveChallenge,
   checkJoinStatus,
-  getJoinedChallenges
+  getJoinedChallenges,
+  listNotEnrolledStudents,
+  bulkEnrollStudents,
 } = require('../controllers/challengeParticipationController');
 
 // Challenge participation routes - specific routes first
@@ -32,5 +34,7 @@ router.get('/:id', protect, getChallenge);
 router.post('/:id/join', protect, joinChallenge);
 router.delete('/:id/join', protect, leaveChallenge);
 router.get('/:id/joined', protect, checkJoinStatus);
+router.get('/:id/not-enrolled-students', protect, listNotEnrolledStudents);
+router.post('/:id/enroll', protect, bulkEnrollStudents);
 
 module.exports = router;
