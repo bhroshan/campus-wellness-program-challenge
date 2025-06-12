@@ -43,13 +43,8 @@ const Register = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message)
-        }
-        if (isSuccess || user) {
-            const from = location.state?.from?.pathname || '/dashboard';
-            navigate(from, { replace: true });
-            dispatch(reset())
+        if (isSuccess && user) {
+            navigate('/dashboard');
         }
     }, [user, isError, isSuccess, message, navigate, dispatch, location])
 

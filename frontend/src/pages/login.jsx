@@ -33,13 +33,8 @@ const Login = () => {
     );
 
     useEffect(() => {
-        if (isError) {
-            toast.error(message);
-        }
-
-        if (isSuccess || user) {
-            const from = location.state?.from?.pathname || '/dashboard';
-            navigate(from, { replace: true });
+        if (isSuccess && user) {
+            navigate('/dashboard');
         }
 
         dispatch(reset());

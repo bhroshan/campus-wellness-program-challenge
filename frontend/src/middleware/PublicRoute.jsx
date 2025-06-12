@@ -13,8 +13,7 @@ const PublicRoute = ({ children }) => {
 
   // If authenticated, redirect to previous page or dashboard
   if (isAuthenticated && isAuthPage) {
-    const from = location.state?.from?.pathname || '/dashboard';
-    return <Navigate to={from} replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
