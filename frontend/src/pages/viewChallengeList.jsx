@@ -114,9 +114,9 @@ function ViewChallengeList() {
                     )}
                 </Box>
             ) : (
-                <Grid container spacing={3} p={5}>
+                <Grid container spacing={3} p={5} justifyContent="start">
                     {challenges.map((challenge) => (
-                        <Grid item xs={12} sm={6} md={4} key={challenge._id}>
+                        <Grid item xs={12} sm={6} md={4} key={challenge._id} sx={{ display: 'flex', justifyContent: 'start' }}>
                             <ChallengeCard
                                 challenge={challenge}
                                 onViewDetails={handleViewDetails}
@@ -126,6 +126,7 @@ function ViewChallengeList() {
                                     joinedChallenges.includes(challenge._id) ? 'Leave Challenge' : 'Join Challenge'}
                                 actionColor={user?.role === 'coordinator' ? 'error' : 
                                     joinedChallenges.includes(challenge._id) ? 'error' : 'primary'}
+                                showEdit={user?.role === 'coordinator'}
                             />
                         </Grid>
                     ))}

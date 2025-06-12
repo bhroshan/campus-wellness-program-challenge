@@ -40,6 +40,11 @@ const sidebarRoutes = {
     ],
     student: [
         {
+            path: '/dashboard',
+            name: 'Dashboard',
+            icon: <DashboardIcon />
+        },
+        {
             path: '/view-challenge-list',
             name: 'View Challenge List',
             icon: <FormatListBulletedIcon />

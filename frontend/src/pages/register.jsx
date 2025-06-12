@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify'
 import { register, reset } from '../features/auth/authSlice'
 import {
@@ -39,6 +39,7 @@ const Register = () => {
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
     const navigate = useNavigate()
+    const location = useLocation();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -46,10 +47,11 @@ const Register = () => {
             toast.error(message)
         }
         if (isSuccess || user) {
-            navigate('/dashboard')
+            const from = location.state?.from?.pathname || '/dashboard';
+            navigate(from, { replace: true });
             dispatch(reset())
         }
-    }, [user, isError, isSuccess, message, navigate, dispatch])
+    }, [user, isError, isSuccess, message, navigate, dispatch, location])
 
     const onChange = (e) => {
         if (e.target.name === 'profile_image') {

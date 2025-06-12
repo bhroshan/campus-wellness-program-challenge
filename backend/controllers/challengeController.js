@@ -78,7 +78,7 @@ const updateChallenge = asyncHandler(async (req, res) => {
   };
 
   if (req.file) {
-    updateData.challenge_image = `/uploads/challenges/${req.file.filename}`;
+    updateData.image = `/uploads/challenges/${req.file.filename}`;
   }
 
   const updatedChallenge = await Challenge.findByIdAndUpdate(

@@ -55,7 +55,7 @@ const CreateChallenge = () => {
 			.unwrap()
 			.then(() => {
 				toast.success('Challenge created successfully');
-				navigate('/dashboard');
+				navigate('/view-challenge-list');
 			})
 			.catch((error) => {
 				toast.error(error?.message || 'Failed to create challenge');

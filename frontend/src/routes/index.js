@@ -8,6 +8,7 @@ import ViewChallengeList from '../pages/viewChallengeList';
 import JoinedChallenge from '../pages/JoinedChallenge';
 import ViewDetails from '../pages/viewDetails';
 import { compose } from '@reduxjs/toolkit';
+import EditChallenge from '../pages/EditChallenge';
 
 // Public routes configuration
 export const publicRoutes = [
@@ -43,6 +44,11 @@ export const privateRoutes = [
         path: 'create-challenge',
         component: CreateChallenge,
         title: 'Create Challenge',
+      },
+      {
+        path: 'edit-challenge/:id',
+        component: EditChallenge,
+        title: 'Edit Challenge',
       },
       {
         path: 'view-challenge-list',

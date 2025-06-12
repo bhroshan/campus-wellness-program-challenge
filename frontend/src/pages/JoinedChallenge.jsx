@@ -94,9 +94,9 @@ function JoinedChallenge() {
                     </Button>
                 </Box>
             ) : (
-                <Grid container spacing={3} p={5}>
+                <Grid container spacing={3} p={5} justifyContent="start">
                     {myJoinedChallenges.map((challenge) => (
-                        <Grid item sm={6} md={4} key={challenge._id}>
+                        <Grid item sm={6} md={4} key={challenge._id} sx={{ display: 'flex', justifyContent: 'start' }}>
                             <ChallengeCard
                                 challenge={challenge}
                                 onViewDetails={handleViewDetails}
