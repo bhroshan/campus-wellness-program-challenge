@@ -74,7 +74,7 @@ function Sidebar() {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/create-challenge')}
                     >
                         Create Wellness Challenge
                     </Button>
@@ -82,7 +82,7 @@ function Sidebar() {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/view-challenge-list')}
                     >
                         View Challenge List
                     </Button>
@@ -90,10 +90,11 @@ function Sidebar() {
                         fullWidth
                         variant="contained"
                         color="primary"
-                        onClick={() => navigate('/dashboard')}
+                        onClick={() => navigate('/joined-challenge')}
                     >
-                        Enroll Participant
+                        Joined challenges
                     </Button>
+
                 </Grid>
             </Grid>
         </>
