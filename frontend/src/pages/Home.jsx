@@ -21,7 +21,7 @@ const Home = () => {
                 Campus Wellness Challenge Platform
             </Typography>
 
-            <Divider my={2} minHeight={5} />
+            <Divider my={2} minheight={5} />
 
             <Grid container spacing={2} justifyContent="center">
                 <Grid item>

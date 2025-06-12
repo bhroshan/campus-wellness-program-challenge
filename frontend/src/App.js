@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './pages/Dashboard';
-import Register from './pages/Register';
-import Login from './pages/Login';
+import Register from './pages/register';
+import Login from './pages/login';
 import Home from './pages/Home';
 import './App.css';
 
