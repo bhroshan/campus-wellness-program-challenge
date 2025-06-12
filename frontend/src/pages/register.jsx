@@ -125,7 +125,9 @@ const Register = () => {
                             textAlign: 'center',
                             color: 'text.primary',
                             fontFamily: 'Roboto, sans-serif',
+                            cursor: 'pointer',
                         }}
+                        onClick={() => navigate('/')}
                     >
                         Campus Wellness Challenge Platform
                     </Typography>
@@ -151,7 +153,7 @@ const Register = () => {
                         <Grid container columnSpacing={17}>
                             {/* Profile Image Upload */}
                             <Grid item size={12}>
-                                <Box p={4} pt={3} pb={0} sx={{ width: '100%', textAlign: 'center' }}>
+                                <Box pt={3} pb={0} sx={{ width: '100%', textAlign: 'center' }}>
                                     <input
                                         accept="image/*"
                                         style={{ display: 'none' }}
@@ -355,6 +357,15 @@ const Register = () => {
                             >
                                 Register
                             </Button>
+                        </Grid>
+                        {/* Already have an account? */}
+                        <Grid item xs={12} sx={{ mt: 2, textAlign: 'center' }}>
+                            <Typography variant="body2" color="textSecondary">
+                                Already have an account?{' '}
+                                <Link href="/login" variant="body2" color="primary">
+                                    Log In
+                                </Link>
+                            </Typography>
                         </Grid>
                     </form>
                 </Box>

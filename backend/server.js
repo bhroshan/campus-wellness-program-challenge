@@ -23,6 +23,7 @@ app.use('/uploads/challenges', express.static('backend/uploads/challenges'));
 //Route setup
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/challenges', require('./routes/challengeRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 app.use(errorHandler);
 

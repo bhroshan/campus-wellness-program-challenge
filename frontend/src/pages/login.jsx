@@ -127,7 +127,9 @@ const Login = () => {
                                 textAlign: 'center',
                                 color: 'primary.gray',
                                 fontFamily: 'Roboto, sans-serif',
+                                cursor: 'pointer'
                             }}
+                            onClick={() => navigate('/')}
                         >
                             Campus Wellness Challenge Platform
                         </Typography>
@@ -199,13 +201,8 @@ const Login = () => {
                             sx={{ mt: 2, textAlign: 'center' }}
                         >
                             Don't have an account?{' '}
-                            <Link
-                                component="button"
-                                variant="body2"
-                                onClick={() => navigate('/register')}
-                                underline="hover"
-                            >
-                                Register
+                            <Link href="/register" variant="body2" color="primary">
+                                Sign Up
                             </Link>
                         </Typography>
                     </Box>

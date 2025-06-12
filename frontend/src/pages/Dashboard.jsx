@@ -1,9 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid, CircularProgress } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchDashboardStats, resetDashboard } from '../features/challenges/dashboardSlice';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import GroupIcon from '@mui/icons-material/Group';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 const Dashboard = () => {
+    const dispatch = useDispatch();
+    const { user } = useSelector((state) => state.auth);
+    const { stats, isLoading, isError, message } = useSelector((state) => state.dashboard);
+
+    useEffect(() => {
+        if (user?.role) {
+            dispatch(fetchDashboardStats(user.role));
+        }
+        return () => {
+            dispatch(resetDashboard());
+        };
+    }, [dispatch, user?.role]);
+
+    if (isLoading) {
+        return <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}><CircularProgress /></Box>;
+    }
+    if (isError) {
+        return <Box sx={{ color: 'red', textAlign: 'center', mt: 4 }}>{message}</Box>;
+    }
+
     return (
         <Box sx={{ width: '100%' }}>
             {/* Dashboard Title */}
@@ -24,7 +49,6 @@ const Dashboard = () => {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    width: '100%',
                     mb: 4,
                     borderRadius: 1
                 }}
@@ -56,39 +80,75 @@ const Dashboard = () => {
             </Box>
 
             {/* Card Box */}
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <Card sx={{ 
-                        backgroundColor: '#BDBDBD', 
-                        borderRadius: 2,
-                        height: '100%'
-                    }}>
-                        <CardContent>
-                            <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
-                                20
-                            </Typography>
-                            <Typography variant="h6" sx={{ color: 'black' }}>
-                                Total Challenges
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                    <Card sx={{ 
-                        backgroundColor: '#BDBDBD', 
-                        borderRadius: 2,
-                        height: '100%'
-                    }}>
-                        <CardContent>
-                            <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
-                                20
-                            </Typography>
-                            <Typography variant="h6" sx={{ color: 'black' }}>
-                                Active Participants
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
+            <Grid container spacing={6}>
+                {user?.role === 'student' && stats && (
+                    <>
+                        <Grid item xs={12} md={6}>
+                            <Card sx={{ backgroundColor: '#BDBDBD', borderRadius: 2, height: '100%' }}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <EmojiEventsIcon fontSize="large" color="primary" />
+                                        <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
+                                            {stats.totalChallenges}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h6" sx={{ color: 'black' }}>
+                                        Available Challenges
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <Card sx={{ backgroundColor: '#BDBDBD', borderRadius: 2, height: '100%' }}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <AssignmentTurnedInIcon fontSize="large" color="success" />
+                                        <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
+                                            {stats.joinedCount}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h6" sx={{ color: 'black' }}>
+                                        Joined Challenges
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </>
+                )}
+                {user?.role === 'coordinator' && stats && (
+                    <>
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{ backgroundColor: '#BDBDBD', borderRadius: 2, height: '100%' }}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <EmojiEventsIcon fontSize="large" color="primary" />
+                                        <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
+                                            {stats.myChallengesCount}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h6" sx={{ color: 'black' }}>
+                                        My Challenges
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <Card sx={{ backgroundColor: '#BDBDBD', borderRadius: 2, height: '100%' }}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <GroupIcon fontSize="large" color="secondary" />
+                                        <Typography variant="h4" sx={{ color: 'black', mb: 1 }}>
+                                            {stats.activeParticipants}
+                                        </Typography>
+                                    </Box>
+                                    <Typography variant="h6" sx={{ color: 'black' }}>
+                                        Active Participants
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </>
+                )}
             </Grid>
         </Box>
     );
