@@ -2,6 +2,7 @@ const asyncHandler = require('express-async-handler');
 
 const Challenge = require('../models/challenge');
 const User = require('../models/users');
+const ChallengeParticipation = require('../models/challengeParticipation');
 
 //@desc     Get challenge (s)
 //@route    GET /api/challenges
@@ -9,7 +10,11 @@ const User = require('../models/users');
 const getChallenges = asyncHandler(async (req, res) => {
   let challenges;
   if(req.user.role === 'student'){
-    challenges = await Challenge.find({});
+    // Find all challenge IDs the student has joined
+    const participations = await ChallengeParticipation.find({ user: req.user.id });
+    const joinedIds = participations.map(p => p.challenge.toString());
+    // Exclude joined challenges
+    challenges = await Challenge.find({ _id: { $nin: joinedIds } });
   }else{
     challenges = await Challenge.find({user: req.user.id});
   }

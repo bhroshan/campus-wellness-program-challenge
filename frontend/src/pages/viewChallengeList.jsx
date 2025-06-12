@@ -1,23 +1,17 @@
-import { Grid, Button, Box, CircularProgress, Paper } from '@mui/material';
+import { Grid, Button, Box, CircularProgress, Typography } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChallenges, deleteChallenge } from '../features/challenges/challengeSlice';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Typography from '@mui/material/Typography';
+import { getChallenges, deleteChallenge, joinChallenge, leaveChallenge } from '../features/challenges/challengeSlice';
 import { useNavigate } from 'react-router-dom';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
-import { API_URL } from '../configs';
 import { toast } from 'react-toastify';
-import NoDataIcon from '@mui/icons-material/SentimentDissatisfied';
+import ChallengeCard from '../components/ChallengeCard';
 
 function ViewChallengeList() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { challenges, isLoading, isError, message } = useSelector(
+    const { challenges, isLoading, isError, message, joinedChallenges } = useSelector(
         (state) => state.challenges
     );
     const { user } = useSelector((state) => state.auth);
@@ -36,6 +30,36 @@ function ViewChallengeList() {
         if (window.confirm('Are you sure you want to delete this challenge?')) {
             dispatch(deleteChallenge(id));
         }
+    };
+
+    const handleJoinChallenge = (id) => {
+        dispatch(joinChallenge(id))
+            .unwrap()
+            .then(() => {
+                dispatch(getChallenges());
+                toast.success('Successfully joined the challenge!');
+            })
+            .catch((error) => {
+                toast.error(error);
+            });
+    };
+
+    const handleLeaveChallenge = (id) => {
+        if (window.confirm('Are you sure you want to leave this challenge?')) {
+            dispatch(leaveChallenge(id))
+                .unwrap()
+                .then(() => {
+                    dispatch(getChallenges());
+                    toast.success('Successfully left the challenge!');
+                })
+                .catch((error) => {
+                    toast.error(error);
+                });
+        }
+    };
+
+    const handleViewDetails = (id) => {
+        navigate(`/view-details/${id}`);
     };
 
     if (isLoading) {
@@ -68,34 +92,24 @@ function ViewChallengeList() {
             </Button>
 
             {challenges.length === 0 ? (
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        minHeight: '60vh',
-                        textAlign: 'center',
-                        p: 3
-                    }}
-                >
-                    <NoDataIcon sx={{ fontSize: 60, color: 'text.secondary', mb: 2 }} />
-                    <Typography variant="h5" color="text.secondary" gutterBottom>
-                        No Challenges Found
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        {user?.role === 'coordinator' 
-                            ? "Start by creating your first wellness challenge!"
-                            : "Check back later for new wellness challenges."}
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: '70vh',
+                    flexDirection: 'column',
+                    gap: 2
+                }}>
+                    <Typography variant="h5" color="text.secondary">
+                        No challenges available
                     </Typography>
                     {user?.role === 'coordinator' && (
                         <Button
                             variant="contained"
                             color="primary"
-                            sx={{ mt: 3 }}
                             onClick={() => navigate('/create-challenge')}
                         >
-                            Create Challenge
+                            Create New Challenge
                         </Button>
                     )}
                 </Box>
@@ -103,48 +117,16 @@ function ViewChallengeList() {
                 <Grid container spacing={3} p={5}>
                     {challenges.map((challenge) => (
                         <Grid item xs={12} sm={6} md={4} key={challenge._id}>
-                            <Card>
-                                <CardMedia
-                                    sx={{ height: 200 }}
-                                    image={challenge.image ? `${API_URL}${challenge.image}` : '/default-challenge.jpg'}
-                                    title={challenge.title}
-                                />
-                                <CardContent>
-                                    <Typography gutterBottom variant="h5" component="div">
-                                        {challenge.title}
-                                    </Typography>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {challenge.description}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button 
-                                        variant='outlined' 
-                                        size="small" 
-                                        onClick={() => navigate(`/view-details/${challenge._id}`)}
-                                    >
-                                        View Details
-                                    </Button>
-                                    {user?.role === 'coordinator' ? (
-                                        <Button 
-                                            variant='outlined' 
-                                            color="error" 
-                                            size="small"
-                                            onClick={() => handleDelete(challenge._id)}
-                                        >
-                                            Delete
-                                        </Button>
-                                    ) : (
-                                        <Button 
-                                            variant='outlined' 
-                                            color="primary" 
-                                            size="small"
-                                        >
-                                            Join Challenge
-                                        </Button>
-                                    )}
-                                </CardActions>
-                            </Card>
+                            <ChallengeCard
+                                challenge={challenge}
+                                onViewDetails={handleViewDetails}
+                                onAction={user?.role === 'coordinator' ? handleDelete : 
+                                    joinedChallenges.includes(challenge._id) ? handleLeaveChallenge : handleJoinChallenge}
+                                actionLabel={user?.role === 'coordinator' ? 'Delete' : 
+                                    joinedChallenges.includes(challenge._id) ? 'Leave Challenge' : 'Join Challenge'}
+                                actionColor={user?.role === 'coordinator' ? 'error' : 
+                                    joinedChallenges.includes(challenge._id) ? 'error' : 'primary'}
+                            />
                         </Grid>
                     ))}
                 </Grid>

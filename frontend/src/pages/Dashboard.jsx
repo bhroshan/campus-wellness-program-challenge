@@ -44,13 +44,13 @@ const Dashboard = () => {
                         variant="h6"
                         sx={{ fontWeight: 280, letterSpacing: 1 }}
                     >
-                        10:30 PM
+                        {new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })}
                     </Typography>
                     <Typography
                         variant="h6"
                         sx={{ fontWeight: 280, letterSpacing: 1 }}
                     >
-                        20 May 2025
+                        {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                     </Typography>
                 </Box>
             </Box>

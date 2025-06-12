@@ -4,6 +4,8 @@ import challengeService from './challengeService';
 const initialState = {
     challenges: [],
     challenge: null,
+    joinedChallenges: [],
+    myJoinedChallenges: [],
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -18,6 +20,42 @@ export const createChallenge = createAsyncThunk(
             const user = JSON.parse(localStorage.getItem('user'));
             const token = user?.token;
             return await challengeService.createChallenge(challengeData, token);
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message) 
+                || error.message 
+                || error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
+// Join challenge
+export const joinChallenge = createAsyncThunk(
+    'challenges/join',
+    async (id, thunkAPI) => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const token = user?.token;
+            const response = await challengeService.joinChallenge(id, token);
+            return id; // Return challenge ID
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message) 
+                || error.message 
+                || error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
+// Leave challenge
+export const leaveChallenge = createAsyncThunk(
+    'challenges/leave',
+    async (id, thunkAPI) => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const token = user?.token;
+            await challengeService.leaveChallenge(id, token);
+            return id; // Return challenge ID
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) 
                 || error.message 
@@ -87,6 +125,23 @@ export const deleteChallenge = createAsyncThunk(
             const token = user?.token;
             await challengeService.deleteChallenge(id, token);
             return id;
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message) 
+                || error.message 
+                || error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
+// Get joined challenges
+export const getJoinedChallenges = createAsyncThunk(
+    'challenges/getJoined',
+    async (_, thunkAPI) => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const token = user?.token;
+            return await challengeService.getJoinedChallenges(token);
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message) 
                 || error.message 
@@ -169,6 +224,49 @@ export const challengeSlice = createSlice({
                 );
             })
             .addCase(deleteChallenge.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(joinChallenge.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(joinChallenge.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                if (!state.joinedChallenges.includes(action.payload)) {
+                    state.joinedChallenges.push(action.payload);
+                }
+            })
+            .addCase(joinChallenge.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(leaveChallenge.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(leaveChallenge.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.joinedChallenges = state.joinedChallenges.filter(id => id !== action.payload);
+            })
+            .addCase(leaveChallenge.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getJoinedChallenges.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getJoinedChallenges.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.myJoinedChallenges = action.payload;
+                // Update the joinedChallenges array with the IDs
+                state.joinedChallenges = action.payload.map(challenge => challenge._id);
+            })
+            .addCase(getJoinedChallenges.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

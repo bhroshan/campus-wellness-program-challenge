@@ -51,6 +51,42 @@ const getChallengeById = async (challengeId, token) => {
     return response.data;
 };
 
+// Join challenge
+const joinChallenge = async (challengeId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.post(API_URL + challengeId + '/join', {}, config);
+    return response.data;
+};
+
+// Leave challenge
+const leaveChallenge = async (challengeId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.delete(API_URL + challengeId + '/join', config);
+    return response.data;
+};
+
+// Check join status
+const checkJoinStatus = async (challengeId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.get(API_URL + challengeId + '/joined', config);
+    return response.data;
+};
+
 // Delete challenge
 const deleteChallenge = async (challengeId, token) => {
     const config = {
@@ -63,12 +99,28 @@ const deleteChallenge = async (challengeId, token) => {
     return response.data;
 };
 
+// Get joined challenges
+const getJoinedChallenges = async (token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.get(API_URL + 'joined', config);
+    return response.data;
+};
+
 const challengeService = {
     createChallenge,
     getChallenges,
     updateChallenge,
     getChallengeById,
-    deleteChallenge
+    joinChallenge,
+    leaveChallenge,
+    checkJoinStatus,
+    deleteChallenge,
+    getJoinedChallenges
 };
 
 export default challengeService; 

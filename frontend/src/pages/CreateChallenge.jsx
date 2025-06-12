@@ -4,45 +4,45 @@ import { useDispatch } from 'react-redux';
 import { createChallenge } from '../features/challenges/challengeSlice';
 import { toast } from 'react-toastify';
 import {
-	Box,
-	Button,
-	Grid,
-	Paper,
-	TextField,
+    Box,
+    Button,
+    Grid,
+    Paper,
+    TextField,
 	Typography,
 } from "@mui/material";
 import AssignmentReturnIcon from "@mui/icons-material/AssignmentReturn";
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 const CreateChallenge = () => {
-	const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState({
 		title: "",
 		description: "",
 		instructions: "",
 		challenge_image: null
-	});
+    });
 
 	const { title, description, instructions, challenge_image } = formData;
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+    const dispatch = useDispatch();
 
-	const onChange = (e) => {
+    const onChange = (e) => {
 		if (e.target.name === 'challenge_image') {
             setFormData((prevState) => ({
                 ...prevState,
                 [e.target.name]: e.target.files[0]
             }))
         } else {
-            setFormData((prevState) => ({
-                ...prevState,
+        setFormData((prevState) => ({
+            ...prevState,
                 [e.target.name]: e.target.value
-            }))
-        }
+        }))
+    }
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
 		const formDataToSend = new FormData();
 		formDataToSend.append('title', title);
 		formDataToSend.append('description', description);
@@ -60,43 +60,43 @@ const CreateChallenge = () => {
 			.catch((error) => {
 				toast.error(error?.message || 'Failed to create challenge');
 			});
-	};
+    };
 
-	return (
+    return (
 		<Box sx={{ width: "100%" }}>
-			<Button
-				variant="contained"
-				startIcon={<AssignmentReturnIcon />}
+            <Button
+                variant="contained"
+                startIcon={<AssignmentReturnIcon />}
 				onClick={() => navigate("/dashboard")}
-				sx={{
+                sx={{
 					mb: 2,
-					backgroundColor: "#EEEEEE",
+                    backgroundColor: "#EEEEEE",
 					color: "black",
 					"&:hover": {
-						backgroundColor: "#BDBDBD",
+                        backgroundColor: "#BDBDBD",
 					},
-				}}
-			>
-				Go Back
-			</Button>
+                }}
+            >
+                Go Back
+            </Button>
 
-			<Paper
+            <Paper
 				elevation={3}
-				sx={{
+                sx={{
 					p: 3,
 					borderRadius: 2,
-				}}
-			>
+                }}
+            >
 				<form onSubmit={handleSubmit}>
 					<Typography
 						variant="h5"
-						sx={{
+                                sx={{
 							mb: 3,
 							fontWeight: 500,
-							letterSpacing: 1,
-						}}
-					>
-						Create Wellness Challenge
+                                    letterSpacing: 1,
+                                }}
+                            >
+                                Create Wellness Challenge
 					</Typography>
 
 					<Grid
@@ -176,67 +176,67 @@ const CreateChallenge = () => {
 
 						<Grid item xs={12}>
 							<TextField
-								label="Title"
+                                        label="Title"
 								name="title"
 								id="title"
-								variant="outlined"
-								fullWidth
-								required
-								value={title}
-								onChange={onChange}
+                                        variant="outlined"
+                                        fullWidth
+                                        required
+                                        value={title}
+                                        onChange={onChange}
 							/>
-						</Grid>
+                                </Grid>
 
 						<Grid item xs={12}>
 							<TextField
-								label="Description"
+                                        label="Description"
 								name="description"
 								id="description"
-								variant="outlined"
-								fullWidth
-								multiline
+                                        variant="outlined"
+                                        fullWidth
+                                        multiline
 								rows={4}
-								required
-								value={description}
-								onChange={onChange}
+                                        required
+                                        value={description}
+                                        onChange={onChange}
 							/>
-						</Grid>
+                                </Grid>
 
 						<Grid item xs={12}>
 							<TextField
-								label="Instructions"
+                                        label="Instructions"
 								id="instructions"
 								name="instructions"
-								variant="outlined"
-								fullWidth
-								multiline
+                                        variant="outlined"
+                                        fullWidth
+                                        multiline
 								rows={3}
-								required
-								value={instructions}
-								onChange={onChange}
+                                        required
+                                        value={instructions}
+                                        onChange={onChange}
 							/>
-						</Grid>
+                                </Grid>
 
 						<Grid item xs={12}>
 							<Button
-								type="submit"
-								variant="contained"
-								fullWidth
-								sx={{
-									backgroundColor: "#424242",
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                sx={{
+                                    backgroundColor: "#424242",
 									"&:hover": {
-										backgroundColor: "black",
+                                        backgroundColor: "black",
 									},
-								}}
-							>
-								Submit
-							</Button>
+                                }}
+                            >
+                                Submit
+                            </Button>
 						</Grid>
-					</Grid>
-				</form>
+                            </Grid>
+                        </form>
 			</Paper>
-		</Box>
-	);
+                    </Box>
+    );
 };
 
 export default CreateChallenge;

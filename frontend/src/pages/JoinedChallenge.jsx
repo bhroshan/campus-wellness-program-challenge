@@ -1,18 +1,56 @@
-import { Grid, Button, } from '@mui/material';
-import React from 'react'
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-
-import Typography from '@mui/material/Typography';
-import Profile from '../pages/images/profile.jpg'
-import Navbar from '../components/Navbar';
+import { Grid, Button, Box, CircularProgress, Typography } from '@mui/material';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import AssignmentReturnIcon from '@mui/icons-material/AssignmentReturn';
+import { getJoinedChallenges, leaveChallenge } from '../features/challenges/challengeSlice';
+import ChallengeCard from '../components/ChallengeCard';
+import { toast } from 'react-toastify';
 
 function JoinedChallenge() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { myJoinedChallenges, isLoading, isError, message } = useSelector(
+        (state) => state.challenges
+    );
+
+    useEffect(() => {
+        dispatch(getJoinedChallenges());
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (isError) {
+            toast.error(message);
+        }
+    }, [isError, message]);
+
+    const handleLeaveChallenge = (id) => {
+        if (window.confirm('Are you sure you want to leave this challenge?')) {
+            dispatch(leaveChallenge(id))
+                .unwrap()
+                .then(() => {
+                    toast.success('Successfully left the challenge!');
+                    // Refresh the joined challenges list
+                    dispatch(getJoinedChallenges());
+                })
+                .catch((error) => {
+                    toast.error(error);
+                });
+        }
+    };
+
+    const handleViewDetails = (id) => {
+        navigate(`/view-details/${id}`);
+    };
+
+    if (isLoading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
         <>
@@ -29,41 +67,49 @@ function JoinedChallenge() {
                     backgroundColor: "#EEEEEE",
                     '&:hover': {
                         backgroundColor: "#BDBDBD",
-
                     }
                 }}
-
             >
                 Go Back
             </Button>
-            <Grid container p={5}>
-                <Grid item xs={'10'} mx={'3'}>
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardMedia
-                            sx={{ height: 140 }}
-                            image={Profile}
-                            title="title"
-                        />
-                        <CardContent>
-                            <Typography gutterBottom variant="h5" component="div">
-                                Title
-                            </Typography>
-                            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                                Discription are a widespread group of squamate reptiles, with over 6,000
-                                species, ranging across all continents except Antarctica
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button variant='outlined' size="small" onClick={() => navigate('/view-details')}>View Details</Button>
-                            <Button variant='outlined' size="small">Drop Challenge</Button>
-                        </CardActions>
-                    </Card>
+
+            {myJoinedChallenges.length === 0 ? (
+                <Box sx={{ 
+                    display: 'flex', 
+                    justifyContent: 'center', 
+                    alignItems: 'center', 
+                    height: '70vh',
+                    flexDirection: 'column',
+                    gap: 2
+                }}>
+                    <Typography variant="h5" color="text.secondary">
+                        You haven't joined any challenges yet
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => navigate('/view-challenge-list')}
+                    >
+                        Browse Challenges
+                    </Button>
+                </Box>
+            ) : (
+                <Grid container spacing={3} p={5}>
+                    {myJoinedChallenges.map((challenge) => (
+                        <Grid item sm={6} md={4} key={challenge._id}>
+                            <ChallengeCard
+                                challenge={challenge}
+                                onViewDetails={handleViewDetails}
+                                onAction={handleLeaveChallenge}
+                                actionLabel="Leave Challenge"
+                                actionColor="error"
+                            />
+                        </Grid>
+                    ))}
                 </Grid>
-
-
-            </Grid>
+            )}
         </>
-    )
+    );
 }
 
 export default JoinedChallenge;

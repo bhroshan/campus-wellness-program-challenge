@@ -20,12 +20,12 @@ const Navbar = () => {
                 <Button 
                     color="inherit" 
                     onClick={handleLogout}
-                    startIcon={<ExitToAppIcon />}
-                >
-                    Logout
+                            startIcon={<ExitToAppIcon />}
+                        >
+                            Logout
                 </Button>
             </Toolbar>
-        </AppBar>
+                </AppBar>
     );
 };
 
