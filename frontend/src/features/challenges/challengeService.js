@@ -51,11 +51,24 @@ const getChallengeById = async (challengeId, token) => {
     return response.data;
 };
 
+// Delete challenge
+const deleteChallenge = async (challengeId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.delete(API_URL + challengeId, config);
+    return response.data;
+};
+
 const challengeService = {
     createChallenge,
     getChallenges,
     updateChallenge,
-    getChallengeById
+    getChallengeById,
+    deleteChallenge
 };
 
 export default challengeService; 
