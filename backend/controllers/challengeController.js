@@ -119,9 +119,24 @@ const deleteChallenge = asyncHandler(async (req, res) => {
   });
 });
 
+//@desc     Get single challenge
+//@route    GET /api/challenges/:id
+//@access   Private
+const getChallenge = asyncHandler(async (req, res) => {
+  const challenge = await Challenge.findById(req.params.id);
+
+  if (!challenge) {
+    res.status(404);
+    throw new Error('Challenge not found');
+  }
+
+  res.status(200).json(challenge);
+});
+
 module.exports = {
   getChallenges,
   setChallenge,
   updateChallenge,
   deleteChallenge,
+  getChallenge,
 };

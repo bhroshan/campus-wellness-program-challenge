@@ -54,11 +54,11 @@ export const privateRoutes = [
         component: JoinedChallenge,
         title: 'Joined Challenges',
       },
+      {
+        path: '/view-details/:id',
+        component: ViewDetails,
+        title: 'ViewDetails',
+      },
     ],
-  },
-  {
-    path: '/view-details',
-    component: ViewDetails,
-    title: 'ViewDetails',
   },
 ];

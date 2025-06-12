@@ -3,6 +3,7 @@ import challengeService from './challengeService';
 
 const initialState = {
     challenges: [],
+    challenge: null,
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -60,6 +61,23 @@ export const updateChallenge = createAsyncThunk(
     }
 );
 
+// Get challenge by id
+export const getChallengeById = createAsyncThunk(
+    'challenges/getById',
+    async (id, thunkAPI) => {
+        try {
+            const user = JSON.parse(localStorage.getItem('user'));
+            const token = user?.token;
+            return await challengeService.getChallengeById(id, token);
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message) 
+                || error.message 
+                || error.toString();
+            return thunkAPI.rejectWithValue(message);
+        }
+    }
+);
+
 export const challengeSlice = createSlice({
     name: 'challenge',
     initialState,
@@ -105,6 +123,19 @@ export const challengeSlice = createSlice({
                 );
             })
             .addCase(updateChallenge.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getChallengeById.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getChallengeById.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.challenge = action.payload;
+            })
+            .addCase(getChallengeById.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

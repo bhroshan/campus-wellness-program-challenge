@@ -40,10 +40,22 @@ const updateChallenge = async (challengeId, challengeData, token) => {
     return response.data;
 };
 
+const getChallengeById = async (challengeId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    };
+
+    const response = await axios.get(API_URL + challengeId, config);
+    return response.data;
+};
+
 const challengeService = {
     createChallenge,
     getChallenges,
-    updateChallenge
+    updateChallenge,
+    getChallengeById
 };
 
 export default challengeService; 
