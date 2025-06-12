@@ -1,7 +1,6 @@
-
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
-import profileImg from '../pages/images/profile.jpg'
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import {
     Box,
@@ -13,10 +12,12 @@ import {
     Paper,
     Divider,
 } from '@mui/material';
-
+import PersonIcon from '@mui/icons-material/Person';
 
 function Sidebar() {
     const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth);
+    
     return (
         <>
             <Grid container sx={{ backgroundColor: '#E1F5FE', width: '100%', height: '100vh' }} flexDirection={'column'}>
@@ -27,21 +28,23 @@ function Sidebar() {
                         backgroundColor: '#E0E0E0',
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center', // Centers horizontally
-                        justifyContent: 'center', // Centers vertically (if height is defined)
-                        py: 2, // Padding top & bottom
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        py: 2,
                     }}
                 >
                     <Avatar
-                        alt="Profile Image"
-                        src={profileImg}
+                        alt={`${user.first_name} ${user.last_name}`}
+                        src={user.profile_image ? `http://localhost:5000${user.profile_image}` : null}
                         sx={{ width: 100, height: 100, mb: 2 }}
-                    />
+                    >
+                        {!user.profile_image && <PersonIcon sx={{ fontSize: 60 }} />}
+                    </Avatar>
                     <Typography variant="h6" sx={{ fontWeight: 500 }} px={2}>
-                        Roshan Bhandary
+                        {`${user.first_name} ${user.last_name}`}
                     </Typography>
                     <Typography variant="subtitle1" sx={{ color: 'gray' }} px={2}>
-                        Coordinator
+                        {user.role}
                     </Typography>
                 </Grid>
 
@@ -51,7 +54,6 @@ function Sidebar() {
                     item
                     sm={12}
                     sx={{
-
                         backgroundColor: '#E1F5FE',
                         display: 'flex',
                         flexDirection: 'column',

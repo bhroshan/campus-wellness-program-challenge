@@ -1,6 +1,7 @@
 const express = require('express');
 const colors = require('colors');
 const dotenv = require('dotenv');
+const path = require('path');
 require('dotenv').config();
 const { errorHandler } = require('./middlewares/errorMiddleware');
 const connectDB = require('./config/db');
@@ -14,6 +15,9 @@ const app = express();
 //Middleware to parse JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 //Route setup
 app.use('/api/users', require('./routes/userRoutes'));

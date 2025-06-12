@@ -32,6 +32,10 @@ const usersSchema = mongoose.Schema(
       enum: ['male', 'female', 'others'],
       required: [true, 'Please identify yourself'],
     },
+    profile_image: {
+      type: String,
+      default: null
+    }
   },
   {
     timestamps: true,

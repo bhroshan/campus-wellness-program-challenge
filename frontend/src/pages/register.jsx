@@ -16,9 +16,11 @@ import {
     Radio,
     RadioGroup,
     TextField,
-    Typography
+    Typography,
+    IconButton
 } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import Loading from '../components/Loading';
 
 const Register = () => {
@@ -30,9 +32,10 @@ const Register = () => {
         role: '',
         password: '',
         confirmPassword: '',
+        profile_image: null
     });
 
-    const { first_name, last_name, email, gender, role, password, confirmPassword } = formData
+    const { first_name, last_name, email, gender, role, password, confirmPassword, profile_image } = formData
     const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
     const navigate = useNavigate()
@@ -44,42 +47,55 @@ const Register = () => {
         }
         if (isSuccess || user) {
             navigate('/dashboard')
+            dispatch(reset())
         }
-        dispatch(reset())
     }, [user, isError, isSuccess, message, navigate, dispatch])
 
     const onChange = (e) => {
-        setFormData((prevState) => ({
-            ...prevState,
-            [e.target.name]: e.target.value,
-
-        }))
+        if (e.target.name === 'profile_image') {
+            setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.files[0]
+            }))
+        } else {
+            setFormData((prevState) => ({
+                ...prevState,
+                [e.target.name]: e.target.value
+            }))
+        }
     }
-
-    // const handleChange = (e) => {
-    //     const { name, value, type, checked } = e.target;
-    //     setFormData((prev) => ({
-    //         ...prev,
-    //         [name]: type === 'checkbox' ? checked : value,
-    //     }));
-    // };
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
-            toast.error('Password do not match')
+            toast.error('Passwords do not match')
         } else {
-            const userData = { first_name, last_name, email, gender, role, password, confirmPassword }
-
-            dispatch(register(userData))
+            // If there's a profile image, use FormData
+            if (profile_image) {
+                const formDataToSend = new FormData();
+                formDataToSend.append('first_name', first_name);
+                formDataToSend.append('last_name', last_name);
+                formDataToSend.append('email', email);
+                formDataToSend.append('gender', gender);
+                formDataToSend.append('role', role);
+                formDataToSend.append('password', password);
+                formDataToSend.append('profile_image', profile_image);
+                dispatch(register(formDataToSend));
+            } else {
+                // If no profile image, send regular JSON data
+                const userData = {
+                    first_name,
+                    last_name,
+                    email,
+                    gender,
+                    role,
+                    password
+                };
+                dispatch(register(userData));
+            }
         }
-
-        // console.log(formData);
     };
-    // if (isLoading) {
-    //     return <Loading />
-    // }
+
     return (
         <Paper
             elevation={8}
@@ -114,30 +130,93 @@ const Register = () => {
                 </Box>
 
                 <Box sx={{ border: 1, borderColor: 'grey.700' }}>
-
-                    {/* from start */}
-
                     <form onSubmit={handleSubmit} style={{ padding: '20px', margin: '10px' }}>
-
-                        {/* Registration Title */}
-                        <Divider><Typography
-                            variant="h1"
-                            sx={{
-                                fontWeight: 300,
-                                fontSize: { xs: 18, sm: 24 },
-                                color: '',
-                                letterSpacing: 1,
-                                fontFamily: 'Roboto, sans-serif',
-                            }}
-                        >
-                            Sign Up
-                        </Typography></Divider>
-
+                        <Divider>
+                            <Typography
+                                variant="h1"
+                                sx={{
+                                    fontWeight: 300,
+                                    fontSize: { xs: 18, sm: 24 },
+                                    color: '',
+                                    letterSpacing: 1,
+                                    fontFamily: 'Roboto, sans-serif',
+                                }}
+                            >
+                                Sign Up
+                            </Typography>
+                        </Divider>
 
                         <Grid container columnSpacing={17}>
+                            {/* Profile Image Upload */}
+                            <Grid item size={12}>
+                                <Box p={4} pt={3} pb={0} sx={{ width: '100%', textAlign: 'center' }}>
+                                    <input
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        id="profile-image-upload"
+                                        type="file"
+                                        name="profile_image"
+                                        onChange={onChange}
+                                    />
+                                    <Box
+                                        sx={{
+                                            width: 150,
+                                            height: 150,
+                                            border: '2px dashed #ccc',
+                                            borderRadius: '4px',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            margin: '0 auto',
+                                            cursor: 'pointer',
+                                            '&:hover': {
+                                                borderColor: 'primary.main',
+                                            },
+                                            position: 'relative',
+                                            overflow: 'hidden'
+                                        }}
+                                        component="label"
+                                        htmlFor="profile-image-upload"
+                                    >
+                                        {profile_image ? (
+                                            <Box
+                                                component="img"
+                                                src={URL.createObjectURL(profile_image)}
+                                                sx={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    objectFit: 'cover'
+                                                }}
+                                            />
+                                        ) : (
+                                            <>
+                                                <PhotoCamera sx={{ fontSize: 40, color: 'text.secondary', mb: 1 }} />
+                                                <Typography variant="body2" color="textSecondary">
+                                                    Click to upload profile picture
+                                                </Typography>
+                                            </>
+                                        )}
+                                    </Box>
+                                    {profile_image && (
+                                        <Box sx={{ mt: 1 }}>
+                                            <Typography variant="body2" color="textSecondary">
+                                                {profile_image.name}
+                                            </Typography>
+                                            <Button
+                                                size="small"
+                                                color="error"
+                                                onClick={() => setFormData(prev => ({ ...prev, profile_image: null }))}
+                                                sx={{ mt: 1 }}
+                                            >
+                                                Remove
+                                            </Button>
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Grid>
 
                             {/* first_name field */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="First Name"
@@ -154,7 +233,6 @@ const Register = () => {
                             </Grid>
 
                             {/* last_name field */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Last Name"
@@ -171,7 +249,6 @@ const Register = () => {
                             </Grid>
 
                             {/* Email field */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Email"
@@ -188,7 +265,6 @@ const Register = () => {
                             </Grid>
 
                             {/* Gender Radio Buttons */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={1.5} pb={0} sx={{ width: '100%' }}><FormControl component="fieldset" required>
                                     <FormLabel component="legend">Gender</FormLabel>
@@ -207,7 +283,6 @@ const Register = () => {
                             </Grid>
 
                             {/* password field */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Password"
@@ -224,7 +299,6 @@ const Register = () => {
                             </Grid>
 
                             {/* confirm_password field */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={0} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Confirm Password"
@@ -241,7 +315,6 @@ const Register = () => {
                             </Grid>
 
                             {/* Role Radio Buttons */}
-
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={1.5} pb={0} sx={{ width: '100%' }}><FormControl component="fieldset" required>
                                     <FormLabel component="legend">Role</FormLabel>
@@ -257,41 +330,34 @@ const Register = () => {
                                     </RadioGroup>
                                 </FormControl></Box>
                             </Grid>
-
                         </Grid>
-                        {/* Sign Up Button / Register */}
-
-                        <Grid item xs={12}><Button
-                            type="submit"
-                            id='submit'
-                            variant="contained"
-                            fullWidth
-                            startIcon={<PersonAddIcon />}
-                            sx={{
-                                mt: 3,
-                                width: '630px',
-                                mx: 'auto',
-                                display: 'flex',
-                                alignItems: 'center',
-                                backgroundColor: "#424242",
-                                '&:hover': {
-                                    backgroundColor: "black",
-
-                                }
-
-
-                            }}
-                        >
-                            Register
-                        </Button>
+                        {/* Sign Up Button */}
+                        <Grid item xs={12}>
+                            <Button
+                                type="submit"
+                                id='submit'
+                                variant="contained"
+                                fullWidth
+                                startIcon={<PersonAddIcon />}
+                                sx={{
+                                    mt: 3,
+                                    width: '630px',
+                                    mx: 'auto',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    backgroundColor: "#424242",
+                                    '&:hover': {
+                                        backgroundColor: "black",
+                                    }
+                                }}
+                            >
+                                Register
+                            </Button>
                         </Grid>
                     </form>
-
-                    {/* from ends */}
-
                 </Box>
-            </Box >
-        </Paper >
+            </Box>
+        </Paper>
     );
 };
 

@@ -30,6 +30,9 @@ const registerUser = asyncHandler(async (req, res) => {
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
+  // Get profile image path if uploaded
+  const profile_image = req.file ? `/uploads/profiles/${req.file.filename}` : null;
+
   //Create user
   const user = await User.create({
     first_name,
@@ -38,6 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
     role,
     password: hashedPassword,
     gender,
+    profile_image
   });
 
   console.log('New user saved:', user);
@@ -50,11 +54,12 @@ const registerUser = asyncHandler(async (req, res) => {
       email: user.email,
       role: user.role,
       gender: user.gender,
+      profile_image: user.profile_image,
       token: generateToken(user._id),
     });
   } else {
     res.status(400);
-    throw new Error('Invalid uer data');
+    throw new Error('Invalid user data');
   }
 });
 
@@ -88,7 +93,7 @@ const loginUser = asyncHandler(async (req, res) => {
 //@route    GET /api/users/me
 //@access   Private
 const getMe = asyncHandler(async (req, res) => {
-  const { _id, first_name, last_name, email, role, gender } =
+  const { _id, first_name, last_name, email, role, gender, profile_image } =
     await User.findById(req.user.id);
   res.status(200).json({
     id: _id,
@@ -97,6 +102,7 @@ const getMe = asyncHandler(async (req, res) => {
     email,
     role,
     gender,
+    profile_image,
   });
 });
 

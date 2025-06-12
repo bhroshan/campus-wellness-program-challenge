@@ -6,8 +6,9 @@ const {
   getMe,
 } = require('../controllers/userController');
 const { protect } = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/uploadMiddleware');
 
-router.post('/', registerUser);
+router.post('/', upload.single('profile_image'), registerUser);
 router.post('/login', loginUser);
 router.get('/me', protect, getMe);
 
