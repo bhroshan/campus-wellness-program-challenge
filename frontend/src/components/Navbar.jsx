@@ -6,10 +6,21 @@ import {
     Typography,
     Grid
 } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout, reset } from '../features/auth/authSlice';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const Navbar = () => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const onLogout = () => {
+        dispatch(logout());
+        dispatch(reset());
+        navigate('/');
+    };
+
     return (
         <>
             <Box sx={{ flexGrow: 1 }}>
@@ -20,7 +31,7 @@ const Navbar = () => {
                         </Typography></Grid>
 
                         <Grid item> <Button
-                            type="submit"
+                            onClick={onLogout}
                             variant="contained"
                             fullWidth
                             startIcon={<ExitToAppIcon />}

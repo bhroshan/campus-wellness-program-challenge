@@ -23,8 +23,8 @@ import Loading from '../components/Loading';
 
 const Register = () => {
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        first_name: '',
+        last_name: '',
         email: '',
         gender: '',
         role: '',
@@ -32,26 +32,21 @@ const Register = () => {
         confirmPassword: '',
     });
 
-    const { firstName, lastName, email, gender, role, password, confirmPassword } = formData
+    const { first_name, last_name, email, gender, role, password, confirmPassword } = formData
+    const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch();
 
-    // const navigate = useNavigate()
-    // const dispatch = useDispatch()
-
-
-    // const { user, isLoading, isError, isSuccess, message } = useSelector((state) => state.auth)
-
-
-
-    // useEffect(() => {
-    //     if (isError) {
-    //         toast.error(message)
-    //     }
-    //     if (isSuccess || user) {
-    //         navigate('/dashboard')
-    //     }
-    //     dispatch(reset())
-    // }, [user, isError, isSuccess, message, navigate, dispatch])
+    useEffect(() => {
+        if (isError) {
+            toast.error(message)
+        }
+        if (isSuccess || user) {
+            navigate('/dashboard')
+        }
+        dispatch(reset())
+    }, [user, isError, isSuccess, message, navigate, dispatch])
 
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -69,15 +64,16 @@ const Register = () => {
     //     }));
     // };
 
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // if (password !== confirmPassword) {
-        //     toast.error('Password do not match')
-        // } else {
-        //     const userData = { firstName, lastName, email, gender, role, password, confirmPassword }
+        if (password !== confirmPassword) {
+            toast.error('Password do not match')
+        } else {
+            const userData = { first_name, last_name, email, gender, role, password, confirmPassword }
 
-        //     dispatch(register(userData))
-        // }
+            dispatch(register(userData))
+        }
 
         // console.log(formData);
     };
@@ -145,14 +141,14 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="First Name"
-                                    name='firstName'
-                                    id='firstName'
+                                    name='first_name'
+                                    id='first_name'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="text"
-                                    value={firstName}
+                                    value={first_name}
                                     onChange={onChange}
                                 /></Box>
                             </Grid>
@@ -162,14 +158,14 @@ const Register = () => {
                             <Grid item xs={12} sm={6}>
                                 <Box p={4} pt={3} pb={0} sx={{ width: '100%' }}><TextField
                                     label="Last Name"
-                                    name='lastName'
-                                    id='lastName'
+                                    name='last_name'
+                                    id='last_name'
                                     variant="outlined"
                                     fullWidth
                                     margin="normal"
                                     required
                                     type="text"
-                                    value={lastName}
+                                    value={last_name}
                                     onChange={onChange}
                                 /></Box>
                             </Grid>
@@ -205,7 +201,7 @@ const Register = () => {
                                     >
                                         <FormControlLabel value="male" control={<Radio />} label="Male" />
                                         <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                        <FormControlLabel value="other" control={<Radio />} label="Other" />
+                                        <FormControlLabel value="others" control={<Radio />} label="Others"/>
                                     </RadioGroup>
                                 </FormControl></Box>
                             </Grid>
