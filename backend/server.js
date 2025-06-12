@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads/challenges', express.static('backend/uploads/challenges'));
 
 //Route setup
 app.use('/api/users', require('./routes/userRoutes'));

@@ -19,6 +19,10 @@ const challengesSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please mention instruction(s) for the given challenge'],
     },
+    image: {
+      type: String,
+      default: null
+    },
   },
   {
     timestamps: true,

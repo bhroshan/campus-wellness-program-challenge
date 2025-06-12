@@ -7,7 +7,12 @@ const User = require('../models/users');
 //@route    GET /api/challenges
 //@access   Private
 const getChallenges = asyncHandler(async (req, res) => {
-  const challenges = await Challenge.find({ user: req.user.id });
+  let challenges;
+  if(req.user.role === 'student'){
+    challenges = await Challenge.find({});
+  }else{
+    challenges = await Challenge.find({user: req.user.id});
+  }
   res.status(200).json(challenges);
 });
 
@@ -15,15 +20,23 @@ const getChallenges = asyncHandler(async (req, res) => {
 //@route    POST /api/challenges
 //@access   Private
 const setChallenge = asyncHandler(async (req, res) => {
-  if (!req.body.title && !req.body.description && !req.body.instructions) {
+  if (!req.body) {
     res.status(400);
-    throw new Error('Please fill out the all field');
+    throw new Error('Request body is missing');
+  }
+
+  const { title, description, instructions } = req.body;
+
+  if (!title || !description || !instructions) {
+    res.status(400);
+    throw new Error('Please fill out all required fields (title, description, and instructions)');
   }
 
   const challenge = await Challenge.create({
-    title: req.body.title,
-    description: req.body.description,
-    instructions: req.body.instructions,
+    title,
+    description,
+    instructions,
+    image: req.file ? `/uploads/challenges/${req.file.filename}` : null,
     user: req.user.id,
   });
 
@@ -55,13 +68,23 @@ const updateChallenge = asyncHandler(async (req, res) => {
     throw new Error('User not authorized');
   }
 
+  const updateData = {
+    ...req.body
+  };
+
+  if (req.file) {
+    updateData.challenge_image = `/uploads/challenges/${req.file.filename}`;
+  }
+
   const updatedChallenge = await Challenge.findByIdAndUpdate(
     req.params.id,
-    req.body,
+    updateData,
     {
       new: true,
     }
   );
+
+  res.status(200).json(updatedChallenge);
 });
 
 //@desc     Delete challenge (s)

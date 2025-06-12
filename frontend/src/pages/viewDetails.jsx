@@ -14,8 +14,6 @@ function ViewDetails() {
 
     return (
         <>
-            <Navbar />
-
             {/* Go Back Button */}
             <Button
                 variant="contained"

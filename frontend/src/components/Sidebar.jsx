@@ -17,6 +17,7 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import GroupIcon from '@mui/icons-material/Group';
+import { API_URL } from '../configs';
 
 // Define routes for different user roles
 const sidebarRoutes = {
@@ -75,7 +76,7 @@ function Sidebar() {
                 >
                     <Avatar
                         alt={`${user.first_name} ${user.last_name}`}
-                        src={user.profile_image ? `http://localhost:5000${user.profile_image}` : null}
+                        src={user.profile_image ? `${API_URL}${user.profile_image}` : null}
                         sx={{ width: 100, height: 100, mb: 2 }}
                     >
                         {!user.profile_image && <PersonIcon sx={{ fontSize: 60 }} />}
