@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import authService from './authService';
 import { toast } from 'react-toastify';
 
-//Get user from localStorage
+// Get user from localStorage
 const user = JSON.parse(localStorage.getItem('user'));
 
 const initialState = {
@@ -14,9 +14,7 @@ const initialState = {
   isAuthenticated: false,
 };
 
-{
-  /* Register user */
-}
+// Register user
 export const register = createAsyncThunk(
   'auth/register',
   async (user, thunkAPI) => {

@@ -9,6 +9,7 @@ const initialState = {
     message: ''
 };
 
+// Fetch dashboard stats based on user role
 export const fetchDashboardStats = createAsyncThunk(
     'dashboard/fetchStats',
     async (role, thunkAPI) => {

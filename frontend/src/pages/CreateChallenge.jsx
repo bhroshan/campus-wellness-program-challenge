@@ -58,7 +58,7 @@ const CreateChallenge = () => {
 				navigate('/view-challenge-list');
 			})
 			.catch((error) => {
-				toast.error(error?.message || 'Failed to create challenge');
+				toast.error(error || 'Failed to create challenge');
 			});
     };
 

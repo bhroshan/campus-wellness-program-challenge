@@ -1,8 +1,0 @@
-This is a mono repo for the campus wellness challenge platform built on MERN stack.
-
-Frontend:
-- Strictly use Material UI for building UI. Don't use any other framework or library.
-
-Backend:
-- use multer for file upload. save locally and save the path in the database.
-- Add necessary fields in the mongodb models.

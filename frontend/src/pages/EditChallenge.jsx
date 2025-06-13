@@ -79,7 +79,7 @@ const EditChallenge = () => {
                 navigate('/view-challenge-list');
             })
             .catch((error) => {
-                toast.error(error?.message || 'Failed to update challenge');
+                toast.error(error || 'Failed to update challenge');
             });
     };
 

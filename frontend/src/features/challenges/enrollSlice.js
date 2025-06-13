@@ -10,6 +10,7 @@ const initialState = {
   enrollLoading: false,
 };
 
+// Fetch students not enrolled in a challenge
 export const fetchNotEnrolledStudents = createAsyncThunk(
   'enroll/fetchNotEnrolledStudents',
   async (challengeId, thunkAPI) => {
@@ -25,6 +26,7 @@ export const fetchNotEnrolledStudents = createAsyncThunk(
   }
 );
 
+// Enroll students in a challenge
 export const enrollStudentsThunk = createAsyncThunk(
   'enroll/enrollStudents',
   async ({ challengeId, studentIds }, thunkAPI) => {
